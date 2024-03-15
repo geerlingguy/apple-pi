@@ -58,7 +58,7 @@ Then enter the password twice. Now you should be able to connect using Samba.
 
 ## Connect to AppleTalk Share
 
-TODO.
+From a computer with access to AppleTalk (requires TCP support—so Mac OS 7.1 or later minimum), connect to `afp://[pi IP or hostname]` and use the `pi` username and the `pi` user account's password.
 
 ## Connect to Samba Share
 
@@ -69,6 +69,7 @@ From a computer with access to Samba, connect to `smb://[pi IP or host]` and use
   - Configure regular rsync backups from Apple Pi to my primary NAS (each of the main folders).
   - Alternatively, skip using local NVMe and mount a volume from the primary NAS to share via AppleTalk
   - See if there are other services that could be hosted on the Pi for the benefit of old Macs.
+  - Think harder about account management / passwords, and segmenting the Mac part of the network on its own VLAN while still being able to get at this server from another network.
 
 ## License
 

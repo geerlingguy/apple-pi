@@ -53,6 +53,14 @@
     name: netatalk
     state: present
 
+- name: Ensure SSH is installed after netatalk may have wiped it out.
+  ansible.builtin.package:
+    name: openssh-server
+    state: present
+  when:
+    - ansible_facts['distribution'] == 'Debian'
+    - ansible_facts['distribution_major_version'] == '12'
+
 - name: Configure netatalk share.
   ansible.builtin.blockinfile:
     path: /etc/netatalk/afp.conf
