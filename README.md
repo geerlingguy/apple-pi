@@ -66,6 +66,8 @@ From a computer with access to Samba, connect to `smb://[pi IP or host]` and use
 
 ## Things remaining to be done
 
+  - Figure out if I can run netatalk v2 and v3 simultaneously (or maybe [run it in a Docker container](https://hub.docker.com/u/netatalk), so it's easier to manage them separately, especially since [installing Netatalk 2 requires manual compilation](https://netatalk.io/docs/Installing-Netatalk-2-on-Debian)...).
+    - Netatalk 3 serves AppleTalk over TCP, and even with newer AppleTalk Client versions, I am having trouble connecting with my old PowerBook 3400c running Mac OS 8.6.
   - Configure regular rsync backups from Apple Pi to my primary NAS (each of the main folders).
   - Alternatively, skip using local NVMe and mount a volume from the primary NAS to share via AppleTalk
   - See if there are other services that could be hosted on the Pi for the benefit of old Macs.
