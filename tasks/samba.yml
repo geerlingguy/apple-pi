@@ -1,0 +1,33 @@
+---
+- name: Ensure Samba share directory exists.
+  ansible.builtin.file:
+    path: /home/pi/apple_pi
+    state: directory
+    mode: 0777
+
+- name: Disable home settings in Samba.
+  ansible.builtin.ini_file:
+    path: /etc/samba/smb.conf
+    section: homes
+    state: absent
+  notify: restart smb
+
+- name: Configure Samba share.
+  ansible.builtin.blockinfile:
+    path: /etc/samba/smb.conf
+    block: |
+      [apple_pi]
+      path = /home/pi/apple_pi
+      writeable=Yes
+      create mask=0777
+      directory mask=0777
+      public=no
+    marker: "# {mark} ANSIBLE MANAGED"
+    insertafter: EOF
+  notify: restart smb
+
+# TODO: See https://stackoverflow.com/a/46428282/100134
+# For now, manually run `sudo smbpasswd -a [username]`
+- name: Configure Samba passwords (not yet implemented).
+  ansible.builtin.meta: noop
+  tags: ['samba']

@@ -1,0 +1,64 @@
+---
+# See: https://github.com/Netatalk/netatalk/discussions/574
+- name: Configure apt to allow netatalk install on Debian 12 bookworm.
+  block:
+    - name: Add unstable repository.
+      ansible.builtin.apt_repository:
+        repo: "{{ item }}"
+        state: present
+      with_items:
+        - deb http://deb.debian.org/debian unstable main contrib non-free
+        - deb-src http://deb.debian.org/debian unstable main contrib non-free
+
+    - name: Configure apt package preferences.
+      ansible.builtin.copy:
+        dest: /etc/apt/preferences
+        content: |
+          Package: *
+          Pin: release a=bookworm
+          Pin-Priority: 500
+
+          Package: netatalk
+          Pin: release a=unstable
+          Pin-Priority: 1000
+
+          Package: libgcrypt20
+          Pin: release a=unstable
+          Pin-Priority: 1000
+
+          Package: libtirpc-common
+          Pin: release a=unstable
+          Pin-Priority: 1000
+
+          Package: openssh-server
+          Pin: release a=unstable
+          Pin-Priority: 1000
+
+          Package: *
+          Pin: release a=unstable
+          Pin-Priority: 100
+      register: apt_prefs
+
+    - name: Update apt caches and upgrade (if prefs changed).
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: full
+      when: apt_prefs is changed
+  when:
+    - ansible_facts['distribution'] == 'Debian'
+    - ansible_facts['distribution_major_version'] == '12'
+
+- name: Install netatalk.
+  ansible.builtin.package:
+    name: netatalk
+    state: present
+
+- name: Configure netatalk share.
+  ansible.builtin.blockinfile:
+    path: /etc/netatalk/afp.conf
+    block: |
+      [apple_pi]
+      path = /home/pi/apple_pi
+    marker: "# {mark} ANSIBLE MANAGED"
+    insertafter: EOF
+  notify: restart netatalk

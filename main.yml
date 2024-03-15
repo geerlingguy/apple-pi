@@ -1,0 +1,24 @@
+---
+- hosts: all
+  become: true
+  gather_facts: true
+
+  vars_files:
+    - config.yml
+
+  handlers:
+    - name: restart netatalk
+      ansible.builtin.service:
+        name: netatalk
+        state: restarted
+
+  roles:
+    - geerlingguy.security
+    - geerlingguy.samba
+
+  tasks:
+    - name: Configure Samba shares.
+      ansible.builtin.import_tasks: tasks/samba.yml
+
+    - name: Configure Netatalk for AFP.
+      ansible.builtin.import_tasks: tasks/netatalk.yml
