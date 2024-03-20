@@ -1,2 +1,4 @@
 ---
-# TODO
+# Add 'uams_guest.so' to uam_list and 'pi' guest account if desired.
+netatalk_uam_list: 'uams_dhx.so,uams_dhx2.so'
+netatalk_guest_account: ''

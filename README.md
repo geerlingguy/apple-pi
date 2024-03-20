@@ -64,9 +64,23 @@ From a computer with access to AppleTalk (requires TCP support—so Mac OS 7.1 o
 
 From a computer with access to Samba, connect to `smb://[pi IP or host]` and use the `pi` user and the password you set earlier.
 
-## Things remaining to be done
+## Debugging
 
-  - Figure out if I can run netatalk v2 and v3 simultaneously (or maybe [run it in a Docker container](https://hub.docker.com/u/netatalk), so it's easier to manage them separately, especially since [installing Netatalk 2 requires manual compilation](https://netatalk.io/docs/Installing-Netatalk-2-on-Debian)...).
+If netatalk is running, check how it's configured using:
+
+```
+$ asip-status localhost
+```
+
+## Enabling Guest Access
+
+If you are having trouble with authentication on older Macs, or just want to enable full guest access to bypass any password shenanigans, you can add `uams_guest.so` to the `netatalk_uam_list` variable in `config.yml`, and add in the username of the account on the Pi (e.g. `pi`) which should be used for guest access.
+
+Make sure to re-run the playbook to apply the change.
+
+## TODOs
+
+  - Consider [running netatalk in a Docker container](https://hub.docker.com/u/netatalk), so it's easier to manage, especially if wanting to try out netatalk 2.
     - Netatalk 3 serves AppleTalk over TCP, and even with newer AppleTalk Client versions, I am having trouble connecting with my old PowerBook 3400c running Mac OS 8.6.
   - Configure regular rsync backups from Apple Pi to my primary NAS (each of the main folders).
   - Alternatively, skip using local NVMe and mount a volume from the primary NAS to share via AppleTalk

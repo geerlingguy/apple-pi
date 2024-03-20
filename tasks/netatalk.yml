@@ -70,3 +70,20 @@
     marker: "# {mark} ANSIBLE MANAGED"
     insertafter: EOF
   notify: restart netatalk
+
+- name: Configure UAMs allowed.
+  community.general.ini_file:
+    path: /etc/netatalk/afp.conf
+    section: Global
+    option: "uam list"
+    value: "{{ netatalk_uam_list }}"
+  notify: restart netatalk
+
+- name: Configure guest account.
+  community.general.ini_file:
+    path: /etc/netatalk/afp.conf
+    section: Global
+    option: "guest account"
+    value: "{{ netatalk_guest_account }}"
+    state: "{{ netatalk_guest_account | ternary('present', 'absent') }}"
+  notify: restart netatalk
